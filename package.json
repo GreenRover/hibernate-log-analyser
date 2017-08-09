@@ -19,6 +19,11 @@
     "categories": [
         "Other"
     ],
+    "keywords": [
+        "Hibernate",
+        "log4j",
+        "sql"
+    ],
     "activationEvents": [
         "onCommand:extension.extractHibernateLog"
     ],
