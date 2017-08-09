@@ -24,12 +24,12 @@ Those have to start with at least 4 #. do be shown in the output.
 
 Activate hibernate logging in log4j.xml
 
-     &lt;logger name="org.hibernate.type"&gt;
-        &lt;level value="trace&gt;
-     &lt;/logger&gt;
-     &lt;logger name="org.hibernate.SQL"&gt;
-        &lt;level value="trace"/&gt;
-     &lt;/logger&gt;
+     <logger name="org.hibernate.type">
+        <level value="trace>
+     </logger>
+     <logger name="org.hibernate.SQL">
+        <level value="trace"/>
+     </logger>
 
 Force hibernate to log querys:
 
@@ -48,3 +48,10 @@ You can patch your vs code installation. Change in
 Following code and add 00. To Increase Limit from 5MB to 500MB
 
     DEL_SYNC_LIMIT=5242880,
+
+Or you filter your with log4j.xml to reduce file size
+
+    <filter class="org.apache.log4j.varia.StringMatchFilter">
+      <param name="StringToMatch" value="extracted value"/>
+      <param name="AcceptOnMatch" value="false"/>
+    </filter>
