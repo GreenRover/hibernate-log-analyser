@@ -18,7 +18,15 @@
         "commands": [
             {
                 "command": "extension.extractHibernateLog",
-                "title": "Extract SQL from Hibernate log"
+                "title": "Extract SQL from Hibernate log",
+                "when": "editorTextFocus"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "extension.extractHibernateLog",
+                "key": "alt+c e",
+                "when": "editorTextFocus"
             }
         ]
     },
