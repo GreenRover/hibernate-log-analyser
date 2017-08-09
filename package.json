@@ -3,6 +3,15 @@
     "displayName": "Hibernate Log analyser",
     "description": "Extract SQL from a hibernate log and renitegrate bind values",
     "version": "0.0.1",
+    "homepage": "https://github.com/GreenRover/hibernate-log-analyser",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/GreenRover/hibernate-log-analyser.git"
+    },
+    "bugs": {
+        "url": "https://github.com/GreenRover/hibernate-log-analyser/issues"
+    },
+    "license": "MIT",
     "publisher": "greenrover",
     "engines": {
         "vscode": "^1.14.0"
