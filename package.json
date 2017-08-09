@@ -25,7 +25,7 @@
         "keybindings": [
             {
                 "command": "extension.extractHibernateLog",
-                "key": "alt+c e",
+                "key": "alt+h",
                 "when": "editorTextFocus"
             }
         ]

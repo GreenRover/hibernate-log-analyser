@@ -9,7 +9,7 @@ Find where in code a query was fired, by using debug log entrys.
 ## Usage
 
 A dialog box is shown by pressing `Ctrl + Alt + P` search for command `Extract SQL from Hibernate log`.  
-Or by pressing `Alt + C E` keys (press <kbd>E</kbd> after release <kbd>Alt</kbd> and <kbd>C</kbd>)  
+Or by pressing `Alt + H` keys (<kbd>Alt</kbd> and <kbd>H</kbd>)  
 It will parse the current open hibernate log file and show the raw sql in new editor.  
 
 ## Debug markers in code
@@ -37,3 +37,14 @@ Force hibernate to log querys:
 
 Further informations can be found at: &quot;[Hibernate show real SQL](https://stackoverflow.com/questions/2536829/hibernate-show-real-sql)&quot;  
 I would advice to use additionaly this extension [Monitor file](https://marketplace.visualstudio.com/items?itemName=rkostrzewski.monitor-file) to monitor log files for changes.
+
+### Limitation
+
+Caused by [this issue](https://github.com/Microsoft/vscode/issues/32118) this extension is limited to a maximum log file size of 5MB
+You can patch your vs code installation. Change in
+
+    "%programfiles(x86)%\Microsoft VS Code\resources\app\out\vs\code\electron-main\main.js"
+
+Following code and add 00. To Increase Limit from 5MB to 500MB
+
+    DEL_SYNC_LIMIT=5242880,
