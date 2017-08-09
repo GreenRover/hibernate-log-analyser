@@ -1,7 +1,7 @@
 {
     "name": "hibernate-log-analyser",
     "displayName": "Hibernate Log analyser",
-    "description": "Extracst SQL from a hibernate log and rintegrate bind parameters reintegrate ",
+    "description": "Extract SQL from a hibernate log and renitegrate bind values",
     "version": "0.0.1",
     "publisher": "greenrover",
     "engines": {

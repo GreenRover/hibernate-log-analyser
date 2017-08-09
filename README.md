@@ -1,4 +1,4 @@
-# hibernate-log-analyser README
+# Hibernate LOG analyser
 
 This is the README for your extension "hibernate-log-analyser". After writing up a brief description, we recommend including the following sections.
 
