@@ -2,7 +2,10 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { HibernateLogExtractor } from './HibernateLogExtractor';
+import * as fs from 'fs';
+import { HibernateExtractorContentProvider } from './HibernateExtractorContentProvider';
+import { FileReloadContentProvider } from './FileReloadContentProvider';
+
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -10,57 +13,51 @@ export function activate(context: vscode.ExtensionContext) {
 
     let previewUri = vscode.Uri.parse('sql-log://preview/sql-log');
 
-    let disposable = vscode.commands.registerCommand('extension.extractHibernateLog', () => {
-        return vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, 'Integrated SQL Log').then((success) => {
-        }, (reason) => {
-            vscode.window.showErrorMessage(reason);
-        });
+    let extractHibernateLogCommand = vscode.commands.registerCommand('extension.extractHibernateLog', () => {
+        return extractSqlFromHibernateLog();
     });
+    let hibernateExtractorProvider = new HibernateExtractorContentProvider();
+    vscode.window.onDidChangeTextEditorSelection((e: vscode.TextEditorSelectionChangeEvent) => {
+		if (e.textEditor === vscode.window.activeTextEditor) {
+			hibernateExtractorProvider.update(previewUri);
+		}
+    })
+    
+    context.subscriptions.push(extractHibernateLogCommand, vscode.Disposable.from(
+        vscode.workspace.registerTextDocumentContentProvider('sql-log', hibernateExtractorProvider)
+    ));
 
-    class TextDocumentContentProvider implements vscode.TextDocumentContentProvider {
+    let reloadFileCommand = vscode.commands.registerCommand('extension.reloadFile', () => {
+       return reloadFile();
+    });
+    let fileReload = new FileReloadContentProvider();
+    
+    context.subscriptions.push(reloadFileCommand, vscode.Disposable.from(
+        vscode.workspace.registerTextDocumentContentProvider('fileReload', fileReload)
+    ));
 
-        private _onDidChange = new vscode.EventEmitter<vscode.Uri>();
-
-        public provideTextDocumentContent(uri: vscode.Uri): string {
-            var editor = vscode.window.activeTextEditor;
-            if (!editor) {
-                console.log("No open text editor");
-                return "<body>Please open any Text in Editor or check that log file is not to big</body>";
-            }
-
-            var selection = editor.selection;
-
-            let logExtractor = new HibernateLogExtractor();
-            let text = selection.isSingleLine ? editor.document.getText() : editor.document.getText(selection);
-            let html = logExtractor.extract(text);
-            return "<body><pre>" + html + "</pre></body>";
-        }
-
-        get onDidChange(): vscode.Event<vscode.Uri> {
-            return this._onDidChange.event;
-        }
-
-        public update(uri: vscode.Uri) {
-            this._onDidChange.fire(uri);
-        }
+    function extractSqlFromHibernateLog() {
+        return vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, 'Integrated SQL Log').then((success) => {
+            }, (reason) => {
+                vscode.window.showErrorMessage(reason);
+            });
     }
 
-    let provider = new TextDocumentContentProvider();
-    let registration = vscode.workspace.registerTextDocumentContentProvider('sql-log', provider);
+    function reloadFile() {
+        let editor = vscode.window.activeTextEditor;
+        let uri = encodeUri(vscode.window.activeTextEditor.document.uri);
+        return vscode.workspace.openTextDocument(uri).then(doc => {
+            vscode.commands.executeCommand('workbench.action.closeActiveEditor');
+            vscode.window.showTextDocument(doc, editor.viewColumn)
+        }, err => {
+            vscode.window.showErrorMessage(err);
+        });
+    }
 
-    vscode.workspace.onDidChangeTextDocument((e: vscode.TextDocumentChangeEvent) => {
-		if (e.document === vscode.window.activeTextEditor.document) {
-			provider.update(previewUri);
-		}
-	});
-
-	vscode.window.onDidChangeTextEditorSelection((e: vscode.TextEditorSelectionChangeEvent) => {
-		if (e.textEditor === vscode.window.activeTextEditor) {
-			provider.update(previewUri);
-		}
-	})
-
-    context.subscriptions.push(disposable, registration);
+    function encodeUri(uri: vscode.Uri): vscode.Uri {
+        return vscode.Uri
+            .parse(`fileReload:${uri.path}`);
+    }
 }
 
 // this method is called when your extension is deactivated

@@ -25,7 +25,8 @@
         "sql"
     ],
     "activationEvents": [
-        "onCommand:extension.extractHibernateLog"
+        "onCommand:extension.extractHibernateLog",
+        "onCommand:extension.reloadFile"
     ],
     "main": "./out/src/extension",
     "contributes": {
@@ -34,12 +35,22 @@
                 "command": "extension.extractHibernateLog",
                 "title": "Extract SQL from Hibernate log",
                 "when": "editorTextFocus"
+            },
+            {
+                "command": "extension.reloadFile",
+                "title": "Reload current editor",
+                "when": "editorTextFocus"
             }
         ],
         "keybindings": [
             {
                 "command": "extension.extractHibernateLog",
                 "key": "alt+h",
+                "when": "editorTextFocus"
+            },
+            {
+                "command": "extension.reloadFile",
+                "key": "alt+f5",
                 "when": "editorTextFocus"
             }
         ]
@@ -58,5 +69,6 @@
         "@types/mocha": "^2.2.32"
     },
     "dependencies": {
+        "rxjs": "^5.0.0-beta.12"
     }
 }
