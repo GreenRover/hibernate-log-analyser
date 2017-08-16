@@ -44,10 +44,12 @@ Caused by [this issue](https://github.com/Microsoft/vscode/issues/32118) this ex
 You can patch your vs code installation. Change in
 
     "%programfiles(x86)%\Microsoft VS Code\resources\app\out\vs\code\electron-main\main.js"
+    or for x64 edition
+    "%programfiles%\Microsoft VS Code\resources\app\out\vs\workbench\workbench.main.js"
 
 Following code and add 00. To Increase Limit from 5MB to 500MB
 
-    DEL_SYNC_LIMIT=5242880,
+    MODEL_SYNC_LIMIT=5242880,
 
 Or you filter your with log4j.xml to reduce file size
 

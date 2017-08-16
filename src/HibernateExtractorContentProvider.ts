@@ -2,23 +2,16 @@
 import * as vscode from 'vscode';
 import { HibernateLogExtractor } from './HibernateLogExtractor';
 
+import * as fs from 'fs';
+
 export class HibernateExtractorContentProvider implements vscode.TextDocumentContentProvider {
 
         private _onDidChange = new vscode.EventEmitter<vscode.Uri>();
 
         public provideTextDocumentContent(uri: vscode.Uri): string {
-            var editor = vscode.window.activeTextEditor;
-            if (!editor) {
-                console.log("No open text editor");
-                return "<body>Please open any Text in Editor or check that log file is not to big</body>";
-            }
-
-            var selection = editor.selection;
-
+            let text: string = fs.readFileSync(uri.fsPath, "utf8");
             let logExtractor = new HibernateLogExtractor();
-            let text = selection.isSingleLine ? editor.document.getText() : editor.document.getText(selection);
-            let html = logExtractor.extract(text);
-            return "<body><pre>" + html + "</pre></body>";
+            return logExtractor.extract(text);
         }
 
         get onDidChange(): vscode.Event<vscode.Uri> {
@@ -26,6 +19,7 @@ export class HibernateExtractorContentProvider implements vscode.TextDocumentCon
         }
 
         public update(uri: vscode.Uri) {
+            console.log("update");
             this._onDidChange.fire(uri);
         }
     }

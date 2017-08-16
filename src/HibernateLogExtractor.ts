@@ -13,7 +13,7 @@ export class HibernateLogExtractor {
             var sqlQuerys = (block.behind) ? that.splitByQuery(block.behind) : [];
 
             if (block.comment.length > 0) {
-                output += block.comment + "\n\n";
+                output += "/* " + block.comment + " */\n\n";
             }
 
             if (sqlQuerys.length > 0) {
@@ -27,8 +27,8 @@ export class HibernateLogExtractor {
     }
 
     private splitByCommentLines(rawText: string) {
-        var blockStrings = rawText.split(/(\#{4}.*)/g); // Each Line starts witch #### is a comment!
-
+        var blockStrings = rawText.split(/(\#{4}.*)/g); // Each Line starts witch #### is a comment!        
+        
         var block = null;
         var blocks = [];
         for (let i = 0; i < blockStrings.length; i++) {

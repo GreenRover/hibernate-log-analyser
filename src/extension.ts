@@ -11,7 +11,7 @@ import { FileReloadContentProvider } from './FileReloadContentProvider';
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-    let previewUri = vscode.Uri.parse('sql-log://preview/sql-log');
+    let previewSchema = 'sql-log';
 
     let extractHibernateLogCommand = vscode.commands.registerCommand('extension.extractHibernateLog', () => {
         return extractSqlFromHibernateLog();
@@ -19,12 +19,12 @@ export function activate(context: vscode.ExtensionContext) {
     let hibernateExtractorProvider = new HibernateExtractorContentProvider();
     vscode.window.onDidChangeTextEditorSelection((e: vscode.TextEditorSelectionChangeEvent) => {
 		if (e.textEditor === vscode.window.activeTextEditor) {
-			hibernateExtractorProvider.update(previewUri);
+			hibernateExtractorProvider.update(vscode.Uri.parse(previewSchema + "?" + vscode.window.activeTextEditor.document.uri.path));
 		}
     })
     
     context.subscriptions.push(extractHibernateLogCommand, vscode.Disposable.from(
-        vscode.workspace.registerTextDocumentContentProvider('sql-log', hibernateExtractorProvider)
+        vscode.workspace.registerTextDocumentContentProvider(previewSchema, hibernateExtractorProvider)
     ));
 
     let reloadFileCommand = vscode.commands.registerCommand('extension.reloadFile', () => {
@@ -37,10 +37,28 @@ export function activate(context: vscode.ExtensionContext) {
     ));
 
     function extractSqlFromHibernateLog() {
-        return vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, 'Integrated SQL Log').then((success) => {
-            }, (reason) => {
-                vscode.window.showErrorMessage(reason);
+        var editor = vscode.window.activeTextEditor;
+        var path;
+        if (editor) {
+            path = editor.document.uri.path;
+        } else {
+            console.log("No open text editor");
+            
+            if (vscode.workspace.textDocuments.length == 1) {
+                path = vscode.workspace.textDocuments[0].uri.path;
+            } else {
+                vscode.window.showErrorMessage("Please open any Text in Editor or check that log file is not to big");
+                return null;
+            }
+        }
+
+        return vscode.workspace.openTextDocument(vscode.Uri.parse(previewSchema + ":" + path)).then(doc => {
+            vscode.window.showTextDocument(doc, vscode.ViewColumn.One).then(editor => {
+                
             });
+        }, err => {
+            vscode.window.showErrorMessage(err);
+        });
     }
 
     function reloadFile() {
