@@ -26,7 +26,8 @@
     ],
     "activationEvents": [
         "onCommand:extension.extractHibernateLog",
-        "onCommand:extension.reloadFile"
+        "onCommand:extension.reloadFile",
+        "onCommand:extension.clearFile"
     ],
     "main": "./out/src/extension",
     "contributes": {
@@ -40,6 +41,11 @@
                 "command": "extension.reloadFile",
                 "title": "Reload current editor",
                 "when": "editorTextFocus"
+            },
+            {
+                "command": "extension.clearFile",
+                "title": "Clear file in current editor",
+                "when": "editorTextFocus"
             }
         ],
         "keybindings": [
@@ -51,6 +57,11 @@
             {
                 "command": "extension.reloadFile",
                 "key": "alt+f5",
+                "when": "editorTextFocus"
+            },
+            {
+                "command": "extension.clearFile",
+                "key": "alt+c",
                 "when": "editorTextFocus"
             }
         ]
