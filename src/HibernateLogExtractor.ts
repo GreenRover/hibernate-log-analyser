@@ -68,7 +68,7 @@ export class HibernateLogExtractor {
 
         this.splitByQueryUsingRegex(str, sqlQuerys, /Hibernate: (select .+|insert .+|update .+)/gi);
         if (sqlQuerys.length < 1) {
-            this.splitByQueryUsingRegex(str, sqlQuerys, /org\.hibernate\.SQL.* \[[^\]]*\] (\/\*.+\*\/)?\s(select .+|insert .+|update .+)/gi);
+            this.splitByQueryUsingRegex(str, sqlQuerys, /org\.hibernate\.SQL.* \[[^\]]*\] (\/\*.+\*\/\s)?(select .+|insert .+|update .+)/gi);
         }
 
         return sqlQuerys;

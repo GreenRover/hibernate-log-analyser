@@ -1,0 +1,15 @@
+some stupid log entrys
+#### First comment
+
+2017-08-10 11:20:43,651 DEBUG AnonymousEventDispatcherThread-5 org.hibernate.SQL - [ <4f436857-5045-4aa5-aacf-b921d539cbf5> ] /* select m from xxx.model.Massnahme as m inner join m.fall as f where f.id IN (:fallIds) */ select * from Massnahme massnahme0_ inner join Fall fall1_ on massnahme0_.FALL_ID=fall1_.ID where fall1_.ID in (?)
+2017-08-10 11:20:43,653 TRACE AnonymousEventDispatcherThread-5 org.hibernate.type.descriptor.sql.BasicBinder - [ <4f436857-5045-4aa5-aacf-b921d539cbf5> ] binding parameter [1] as [BIGINT] - [2195002840931]
+
+some stupid log entrys
+some stupid log entrys
+
+2017-08-10 11:20:43,651 DEBUG AnonymousEventDispatcherThread-5 xx.foo - [ grrr] #### Second comment
+
+2017-08-10 11:20:43,651 DEBUG AnonymousEventDispatcherThread-5 org.hibernate.SQL - [ <4f436857-5045-4aa5-aacf-b921d539cbf5> ] /* select m from xxx.model.Massnahme as m inner join m.fall as f where f.id IN (:fallIds) */ select * from Massnahme massnahme0_ inner join Fall fall1_ on massnahme0_.FALL_ID=fall1_.ID where fall1_.ID in (?)
+2017-08-10 11:20:43,653 TRACE AnonymousEventDispatcherThread-5 org.hibernate.type.descriptor.sql.BasicBinder - [ <4f436857-5045-4aa5-aacf-b921d539cbf5> ] binding parameter [1] as [BIGINT] - [2195002840931]
+
+#### Third comment
