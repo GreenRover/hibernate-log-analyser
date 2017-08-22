@@ -16,6 +16,8 @@ export class HibernateLogExtractor {
             output += "\n\n" + p.getOutput(that.config);
         });
 
+        // https://github.com/Microsoft/vscode-extension-samples/blob/master/statusbar-sample/src/extension.ts
+
         return output.trim();
     }
 

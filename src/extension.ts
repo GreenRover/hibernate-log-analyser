@@ -13,7 +13,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     let previewSchema = 'sql-log';
 
-    let extractHibernateLogCommand = vscode.commands.registerCommand('extension.extractHibernateLog', () => {
+    let extractHibernateLogCommand = vscode.commands.registerCommand('hibernateLogExtract.extractHibernateLog', () => {
         return extractSqlFromHibernateLog();
     });
     let hibernateExtractorProvider = new HibernateExtractorContentProvider();
@@ -27,7 +27,7 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.workspace.registerTextDocumentContentProvider(previewSchema, hibernateExtractorProvider)
     ));
 
-    let reloadFileCommand = vscode.commands.registerCommand('extension.reloadFile', () => {
+    let reloadFileCommand = vscode.commands.registerCommand('hibernateLogExtract.reloadFile', () => {
        return reloadFile();
     });
     let fileReload = new FileReloadContentProvider();
@@ -37,7 +37,7 @@ export function activate(context: vscode.ExtensionContext) {
     ));
 
 
-    let clearFileCommand = vscode.commands.registerCommand('extension.clearFile', () => {
+    let clearFileCommand = vscode.commands.registerCommand('hibernateLogExtract.clearFile', () => {
         clearFile();
         return reloadFile();
      });
