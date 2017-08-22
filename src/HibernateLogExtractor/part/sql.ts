@@ -1,6 +1,7 @@
 let sqlFormatter = require('../../sql-formatter.min.js');
 
 import { part } from './abstract';
+import { HibernateLogExtractorConfig } from '../config';
 
 export class sql extends part {
     static testRegexA = /Hibernate: (\/\*.+\*\/\s)?(select .+|insert .+|update .+)/i;
@@ -35,11 +36,23 @@ export class sql extends part {
         }
     }
 
-    public getOutput(): string {
-        if (Object.keys(this.bindings).length == 0) {
-            return sqlFormatter.format(this.query);
+    public getOutput(config: HibernateLogExtractorConfig): string {
+        let query: string = this.query;
+        if (Object.keys(this.bindings).length > 0) {
+            query = this.joinBindings();
         }
 
+        query = sqlFormatter.format(query);
+
+        if (config.sqlComment && this.comment.length > 0) {
+            return this.comment + "\n" + query;
+        }
+
+        return query;
+    }
+
+
+    private joinBindings(): string {
         var expectedBindingsCount = this.query.split("?").length - 1;
 
         let query = this.query;
@@ -54,7 +67,7 @@ export class sql extends part {
             query = query.replace(/\?/, value);
         }
 
-        return sqlFormatter.format(query);
+        return query;
     }
 
     public complete(bindsString: string): void {

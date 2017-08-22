@@ -1,3 +1,4 @@
+import { HibernateLogExtractorConfig } from '../config';
 import { part } from './abstract';
 
 export class comment extends part {
@@ -19,7 +20,7 @@ export class comment extends part {
             this.comment = comment.trim();
         }
     
-        public getOutput(): string {
+        public getOutput(config: HibernateLogExtractorConfig): string {
             return "/* " + this.comment + " */";
         }
     

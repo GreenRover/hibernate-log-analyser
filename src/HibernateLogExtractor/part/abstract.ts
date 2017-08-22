@@ -1,6 +1,7 @@
+import { HibernateLogExtractorConfig } from '../config';
 
 export abstract class part {
-    abstract getOutput(): string;
+    abstract getOutput(config: HibernateLogExtractorConfig): string;
 
     abstract complete(behind: string): void;
 }

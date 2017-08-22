@@ -1,3 +1,4 @@
+/* select m from xxx.model.Massnahme as m inner join m.fall as f where f.id IN (:fallIds) */
 select
   *
 from

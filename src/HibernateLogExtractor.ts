@@ -1,18 +1,17 @@
 import { part } from './HibernateLogExtractor/part/abstract';
 import { sql } from './HibernateLogExtractor/part/sql';
 import { comment } from './HibernateLogExtractor/part/comment';
+import { HibernateLogExtractorConfig } from './HibernateLogExtractor/config';
 
 export class HibernateLogExtractor {
-
-    constructor() {
-
+    constructor(private config: HibernateLogExtractorConfig = new HibernateLogExtractorConfig()) {
     }
 
     public extract<T extends part>(input: string): string {
         var that = this;
         var output = "";
         this.split(input).forEach(function (p: T) {
-            output += "\n\n" + p.getOutput();
+            output += "\n\n" + p.getOutput(that.config);
         });
 
         return output.trim();
