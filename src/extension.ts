@@ -36,6 +36,16 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.workspace.registerTextDocumentContentProvider('fileReload', fileReload)
     ));
 
+
+    let clearFileCommand = vscode.commands.registerCommand('extension.clearFile', () => {
+        clearFile();
+        return reloadFile();
+     });
+     context.subscriptions.push(clearFileCommand, vscode.Disposable.from(
+         vscode.workspace.registerTextDocumentContentProvider('fileReload', fileReload)
+     ));
+    
+
     function extractSqlFromHibernateLog() {
         var editor = vscode.window.activeTextEditor;
         var path;
@@ -59,6 +69,11 @@ export function activate(context: vscode.ExtensionContext) {
         }, err => {
             vscode.window.showErrorMessage(err);
         });
+    }
+
+    function clearFile() {
+        let editor = vscode.window.activeTextEditor;
+        fs.truncateSync(vscode.window.activeTextEditor.document.uri.fsPath);
     }
 
     function reloadFile() {
