@@ -1,5 +1,5 @@
 2017-08-10 11:21:04,797 DEBUG AnonymousEventDispatcherThread-2 org.hibernate.SQL - [ <> ] select * from ANFRAGE aa0_ left outer join ANFRAGE_TYP at1_ on anfrage0_.TYP_ID=at1_.ID left outer join fooo foo2_ on anfrage0_.FOO_ID=foo2_.ID where anfrage7_.XX=? and anfrage0_.ZZ=? and anfrage7_.ORT=? and anfrage0_.ZEIT>=?
 2017-08-10 11:21:04,797 TRACE AnonymousEventDispatcherThread-2 org.hibernate.type.descriptor.sql.BasicBinder - [ <> ] binding parameter [1] as [VARCHAR] - [2166]
 2017-08-10 11:21:04,797 TRACE AnonymousEventDispatcherThread-2 org.hibernate.type.descriptor.sql.BasicBinder - [ <> ] binding parameter [2] as [VARCHAR] - [15340]
-2017-08-10 11:21:04,797 TRACE AnonymousEventDispatcherThread-2 org.hibernate.type.descriptor.sql.BasicBinder - [ <> ] binding parameter [3] as [VARCHAR] - [XX]
+2017-08-10 11:21:04,797 TRACE AnonymousEventDispatcherThread-2 org.hibernate.type.descriptor.sql.BasicBinder - [ <> ] binding parameter [3] as [VARCHAR] - [123-XXYZT-4567-foo]
 2017-08-10 11:21:04,797 TRACE AnonymousEventDispatcherThread-2 org.hibernate.type.descriptor.sql.BasicBinder - [ <> ] binding parameter [4] as [TIMESTAMP] - [Thu Aug 10 11:21:04 CEST 2017]

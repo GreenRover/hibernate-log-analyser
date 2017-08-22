@@ -7,6 +7,6 @@ from
 where
   anfrage7_.XX = 2166
   and anfrage0_.ZZ = 15340
-  and anfrage7_.ORT = 'XX'
+  and anfrage7_.ORT = '123-XXYZT-4567-foo'
   and anfrage0_.ZEIT >= TO_TIMESTAMP('2017-08-10 11:21:04', 'YYYY-MM-DD HH24:MI:SS')
   /* Thu Aug 10 11:21:04 CEST 2017 */;

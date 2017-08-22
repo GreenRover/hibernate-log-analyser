@@ -1,0 +1,2 @@
+2017-08-10 11:20:43,651 DEBUG AnonymousEventDispatcherThread-5 org.hibernate.SQL - [ <4f436857-5045-4aa5-aacf-b921d539cbf5> ] select * from abc
+2017-08-10 11:20:43,651 DEBUG AnonymousEventDispatcherThread-5 org.hibernate.SQL - [ <4f436857-5045-4aa5-aacf-b921d539cbf5> ] select * from xyz;

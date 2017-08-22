@@ -21,6 +21,10 @@ suite("HibernateLogExtractor Tests", () => {
             testFile("comments");
         });
 
+        test("traillingColon", () => {
+            testFile("traillingColon");
+        });
+
         let testFile = (baseName: string): void => {
             let path: string = __dirname + "/../../test/hibernateLog/" + baseName;
             let log: string = fs.readFileSync(path + ".log", "utf8");
