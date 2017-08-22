@@ -2,6 +2,7 @@ import { part } from './HibernateLogExtractor/part/abstract';
 import { sql } from './HibernateLogExtractor/part/sql';
 import { hql } from './HibernateLogExtractor/part/hql';
 import { comment } from './HibernateLogExtractor/part/comment';
+import { statistic } from './HibernateLogExtractor/part/statistic';
 import { HibernateLogExtractorConfig } from './HibernateLogExtractor/config';
 
 export class HibernateLogExtractor {
@@ -40,6 +41,9 @@ export class HibernateLogExtractor {
             testAndTake( comment.test(line) );
             if (this.config.hql) {
                 testAndTake( hql.test(line) );
+            }
+            if (this.config.statistic) {
+                testAndTake( statistic.test(line) );
             }
 
             behind += line + "\n";

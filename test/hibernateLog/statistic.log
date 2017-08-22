@@ -1,0 +1,16 @@
+2017-08-10 11:20:43,651 DEBUG AnonymousEventDispatcherThread-5 org.hibernate.SQL - [ <4f436857-5045-4aa5-aacf-b921d539cbf5> ] /* select m from xxx.model.Massnahme as m inner join m.fall as f where f.id IN (:fallIds) */ select * from Massnahme massnahme0_ inner join Fall fall1_ on massnahme0_.FALL_ID=fall1_.ID where fall1_.ID in (?)
+2017-08-10 11:20:43,653 TRACE AnonymousEventDispatcherThread-5 org.hibernate.type.descriptor.sql.BasicBinder - [ <4f436857-5045-4aa5-aacf-b921d539cbf5> ] binding parameter [1] as [BIGINT] - [2195002840931]
+2017-08-21 13:36:06,894 INFO AnonymousEventDispatcherThread-1 org.hibernate.engine.internal.StatisticalLoggingSessionEventListener - [] Session Metrics {
+    1109518 nanoseconds spent acquiring 1 JDBC connections;
+    48017 nanoseconds spent releasing 1 JDBC connections;
+    296899 nanoseconds spent preparing 12 JDBC statements;
+    23594942 nanoseconds spent executing 12 JDBC statements;
+    0 nanoseconds spent executing 0 JDBC batches;
+    0 nanoseconds spent performing 0 L2C puts;
+    0 nanoseconds spent performing 0 L2C hits;
+    0 nanoseconds spent performing 0 L2C misses;
+    15878164 nanoseconds spent executing 5 flushes (flushing a total of 29 entities and 69 collections);
+    13195 nanoseconds spent executing 3 partial-flushes (flushing a total of 0 entities and 0 collections)
+}
+2017-08-10 11:20:43,651 DEBUG AnonymousEventDispatcherThread-5 org.hibernate.SQL - [ <4f436857-5045-4aa5-aacf-b921d539cbf5> ] select * from Massnahme massnahme0_ inner join Fall fall1_ on massnahme0_.FALL_ID=fall1_.ID where fall1_.ID in (?)
+2017-08-10 11:20:43,653 TRACE AnonymousEventDispatcherThread-5 org.hibernate.type.descriptor.sql.BasicBinder - [ <4f436857-5045-4aa5-aacf-b921d539cbf5> ] binding parameter [1] as [BIGINT] - [2195002840931]

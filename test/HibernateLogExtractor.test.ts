@@ -45,6 +45,11 @@ suite("HibernateLogExtractor Tests", () => {
         testFile("hqlWithoutCommentsInSql");
     });
 
+    test("statistic", () => {
+        config.statistic = true;
+        testFile("statistic");
+    });
+
     let testFile = (baseName: string): void => {
         let path: string = __dirname + "/../../test/hibernateLog/" + baseName;
         let log: string = fs.readFileSync(path + ".log", "utf8");
