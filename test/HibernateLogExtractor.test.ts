@@ -33,6 +33,18 @@ suite("HibernateLogExtractor Tests", () => {
         testFile("commentsInSql");
     });
 
+    test("hqlWithCommentsInSql", () => {
+        config.hql = true;
+        config.sqlComment = true;
+        testFile("hqlWithCommentsInSql");
+    });
+
+    test("hqlWithoutCommentsInSql", () => {
+        config.hql = true;
+        config.sqlComment = false;
+        testFile("hqlWithoutCommentsInSql");
+    });
+
     let testFile = (baseName: string): void => {
         let path: string = __dirname + "/../../test/hibernateLog/" + baseName;
         let log: string = fs.readFileSync(path + ".log", "utf8");

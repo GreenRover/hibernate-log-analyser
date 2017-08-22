@@ -4,7 +4,7 @@ import { part } from './abstract';
 export class comment extends part {
     
         static testRegex = /(\#{4}.*)/; // Each Line starts witch #### is a comment!  
-        comment: string;
+        private comment: string;
         
         public static test(line: string): comment|null {
             var result = comment.testRegex.exec(line);

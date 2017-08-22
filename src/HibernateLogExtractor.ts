@@ -1,5 +1,6 @@
 import { part } from './HibernateLogExtractor/part/abstract';
 import { sql } from './HibernateLogExtractor/part/sql';
+import { hql } from './HibernateLogExtractor/part/hql';
 import { comment } from './HibernateLogExtractor/part/comment';
 import { HibernateLogExtractorConfig } from './HibernateLogExtractor/config';
 
@@ -37,6 +38,9 @@ export class HibernateLogExtractor {
         rawText.split("\n").forEach(line => {
             testAndTake( sql.test(line) );
             testAndTake( comment.test(line) );
+            if (this.config.hql) {
+                testAndTake( hql.test(line) );
+            }
 
             behind += line + "\n";
         });

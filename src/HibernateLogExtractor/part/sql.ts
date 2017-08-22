@@ -7,9 +7,9 @@ export class sql extends part {
     static testRegexA = /Hibernate: (\/\*.+\*\/\s)?(select .+|insert .+|update .+)/i;
     static testRegexB = /org\.hibernate\.SQL.* \[[^\]]*\] (\/\*.+\*\/\s)?(select .+|insert .+|update .+)/i
 
-    query: string;
-    bindings = {};
-    comment: string;
+    private query: string;
+    private bindings = {};
+    private comment: string;
 
     public static test(line: string): sql|null {
         var resultA = sql.testRegexA.exec(line);
