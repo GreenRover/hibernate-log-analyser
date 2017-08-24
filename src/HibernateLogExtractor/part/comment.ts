@@ -27,4 +27,8 @@ export class comment extends part {
         public complete(behind: string): void {
             // noop
         }
+        
+        public getStats(stats: Map<string, number>): void {
+            // noop
+        }
     }

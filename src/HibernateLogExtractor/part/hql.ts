@@ -34,4 +34,8 @@ export class hql extends part {
     public complete(behind: string): void {
         // noop
     }
+
+    public getStats(stats: Map<string, number>): void {
+        this.addToStats(stats, "queryTime", this.time);
+    }
 }

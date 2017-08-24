@@ -9,14 +9,13 @@ export class HibernateLogExtractor {
     constructor(private config: HibernateLogExtractorConfig = new HibernateLogExtractorConfig()) {
     }
 
-    public extract<T extends part>(input: string): string {
+    public extract<T extends part>(input: string, stats: Map<string, number> = new Map()): string {
         var that = this;
         var output = "";
         this.split(input).forEach(function (p: T) {
             output += "\n\n" + p.getOutput(that.config);
+            p.getStats(stats);
         });
-
-        // https://github.com/Microsoft/vscode-extension-samples/blob/master/statusbar-sample/src/extension.ts
 
         return output.trim();
     }

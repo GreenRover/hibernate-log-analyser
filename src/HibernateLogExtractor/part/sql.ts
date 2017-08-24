@@ -4,28 +4,29 @@ import { part } from './abstract';
 import { HibernateLogExtractorConfig } from '../config';
 
 export class sql extends part {
-    static testRegexA = /Hibernate: (\/\*.+\*\/\s)?(select .+|insert .+|update .+)/i;
-    static testRegexB = /org\.hibernate\.SQL.* \[[^\]]*\] (\/\*.+\*\/\s)?(select .+|insert .+|update .+)/i
+    static testRegexA = /Hibernate: (\/\*.+\*\/\s)?((select|insert|update|delete) .+)/i;
+    static testRegexB = /org\.hibernate\.SQL.* \[[^\]]*\] (\/\*.+\*\/\s)?((select|insert|update|delete) .+)/i
 
     private query: string;
+    private queryType: string;
     private bindings = {};
     private comment: string;
 
     public static test(line: string): sql|null {
         var resultA = sql.testRegexA.exec(line);
         if (resultA !== null) {
-            return new sql(resultB[2], resultB[1] || "");
+            return new sql(resultB[2], resultB[1] || "", resultB[3]);
         }
 
         var resultB = sql.testRegexB.exec(line);
         if (resultB !== null) {
-            return new sql(resultB[2], resultB[1] || "");
+            return new sql(resultB[2], resultB[1] || "", resultB[3]);
         }
 
         return null;
     }
 
-    constructor(query: string, comment: string) {
+    constructor(query: string, comment: string, queryType: string) {
         super();
         
         this.query = query.trim();
@@ -34,6 +35,8 @@ export class sql extends part {
         if (this.query.substr(this.query.length -1, 1) != ";") {
             this.query += ";";
         }
+
+        this.queryType = queryType.toLowerCase();
     }
 
     public getOutput(config: HibernateLogExtractorConfig): string {
@@ -51,6 +54,9 @@ export class sql extends part {
         return query;
     }
 
+    public getStats(stats: Map<string, number>): void {
+        this.addToStats(stats, this.queryType, 1);
+    }
 
     private joinBindings(): string {
         var expectedBindingsCount = this.query.split("?").length - 1;

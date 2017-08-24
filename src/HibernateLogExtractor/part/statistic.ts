@@ -41,6 +41,10 @@ export class statistic extends part {
             }
         });
     }
+
+    public getStats(stats: Map<string, number>): void {
+        // noop
+    }
 }
 
 class Stat {
