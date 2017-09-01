@@ -13,55 +13,63 @@ suite("HibernateLogExtractor Tests", () => {
     let config: HibernateLogExtractorConfig = new HibernateLogExtractorConfig();
 
     test("Include bindings basic", () => {
-        testFile("bindingsBasic");
+        return testFile("bindingsBasic");
     });
 
     test("Include bindings complicated", () => {
-        testFile("bindingsComplicated");
+        return testFile("bindingsComplicated");
     });
 
     test("comments", () => {
-        testFile("comments");
+        return testFile("comments");
     });
 
     test("traillingColon", () => {
-        testFile("traillingColon");
+        return testFile("traillingColon");
     });
 
     test("commentsInSql", () => {
         config.sqlComment = true;
-        testFile("commentsInSql");
+        return testFile("commentsInSql");
     });
 
     test("hqlWithCommentsInSql", () => {
         config.hql = true;
         config.sqlComment = true;
-        testFile("hqlWithCommentsInSql");
+        return testFile("hqlWithCommentsInSql");
     });
 
     test("hqlWithoutCommentsInSql", () => {
         config.hql = true;
         config.sqlComment = false;
-        testFile("hqlWithoutCommentsInSql");
+        return testFile("hqlWithoutCommentsInSql");
     });
 
     test("statistic", () => {
         config.statistic = true;
-        testFile("statistic");
+        return testFile("statistic");
     });
 
-    let testFile = (baseName: string): void => {
+    let testFile = (baseName: string): Promise<void> => {
         let path: string = __dirname + "/../../test/hibernateLog/" + baseName;
-        let log: string = fs.readFileSync(path + ".log", "utf8");
         let expectedSql: string = fs.readFileSync(path + ".sql", "utf8") //
             .trim().replace(/\r\n/g, "\n");
 
         let logExtractor = new HibernateLogExtractor(config);
-        let sql: string = logExtractor.extract(log) //
-            .trim().replace(/\r\n/g, "\n");
-
-        assert.notEqual(sql, "", "Empty result");
-
-        assert.equal(sql, expectedSql);        
+        let fileReadet: Promise<void> = logExtractor.extractFromFile(path + ".log");
+  
+        return fileReadet.then(
+            () => {
+                let sql: string = logExtractor.getSql() //
+                .trim().replace(/\r\n/g, "\n");
+    
+                assert.notEqual(sql, "", "Empty result");
+    
+                assert.equal(sql, expectedSql);
+            },
+            (err: Error) => {
+                assert.equal(1, 0, err.message);
+            }
+        );    
     };
 });

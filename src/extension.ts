@@ -6,13 +6,14 @@ import * as fs from 'fs';
 import { HibernateLogExtractor } from './HibernateLogExtractor';
 import { HibernateLogExtractorConfig } from './HibernateLogExtractor/config';
 import { FileReloadContentProvider } from './FileReloadContentProvider';
-
+import { FileUtils } from './FileUtils';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
     const status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+    const TWO_MB: number = 2 * 1024 * 1024; 
 
     let extractHibernateLogCommand = vscode.commands.registerCommand('hibernateLogExtract.extractHibernateLog', () => {
         return extractSqlFromHibernateLog();
@@ -51,19 +52,23 @@ export function activate(context: vscode.ExtensionContext) {
                 return null;
             }
         }
+
+        let isLargeFile: boolean = (FileUtils.getFilesize(path) > this.TWO_MB);            
     
-        let stats: Map<string, number> = new Map();        
-    
-        let options: Object = {
-            content: getSQL(path, stats),
-            language: "sql"
-        };
-    
-        return vscode.workspace.openTextDocument(options).then(doc => {
-            vscode.window.showTextDocument(doc, vscode.ViewColumn.One);
-            updateStatus(stats);
-        }, err => {
-            vscode.window.showErrorMessage(err);
+        let stats: Map<string, number> = new Map();
+        
+        getSQL(path, stats).then((sql: string) => {
+            let options: Object = {
+                content: sql,
+                language: "sql"
+            };
+        
+            vscode.workspace.openTextDocument(options).then(doc => {
+                vscode.window.showTextDocument(doc, vscode.ViewColumn.One);
+                updateStatus(stats);
+            }, err => {
+                vscode.window.showErrorMessage(err);
+            });
         });
     }
 
@@ -82,12 +87,18 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {
 }
 
-function getSQL(path: string, stats: Map<string, number>): string {
-    let text: string = fs.readFileSync(path, "utf8");
-    let logExtractor = new HibernateLogExtractor(getConfig());
-    let sql: string = logExtractor.extract(text, stats);
-
-    return sql;
+function getSQL(path: string, stats: Map<string, number>): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+        let logExtractor = new HibernateLogExtractor(getConfig());
+        logExtractor.extractFromFile(path).then(
+            () => {
+                resolve( logExtractor.getSql(stats) );
+            },
+            (err: Error) => {
+                reject(err);
+            }
+        );
+    });
 }
 
 function getConfig(): HibernateLogExtractorConfig {
