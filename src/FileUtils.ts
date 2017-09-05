@@ -8,7 +8,7 @@ export class FileUtils {
     public static getFilesize(path: string): number {
         let fd: number = fs.openSync(path, 'r');
         let stats: fs.Stats = fs.fstatSync(fd);
-        fs.close(fd);
+        fs.closeSync(fd);
 
         return stats.size;
     }

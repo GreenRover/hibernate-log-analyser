@@ -53,11 +53,22 @@ export function activate(context: vscode.ExtensionContext) {
             }
         }
 
-        let isLargeFile: boolean = (FileUtils.getFilesize(path) > this.TWO_MB);            
-    
         let stats: Map<string, number> = new Map();
+        let isLargeFile: boolean = (FileUtils.getFilesize(path) > TWO_MB);
         
-        getSQL(path, stats).then((sql: string) => {
+        if (isLargeFile) {
+            vscode.window.withProgress({ location: vscode.ProgressLocation.Window, title: 'Extracting SQL'}, (progress) => {
+                progress.report({ message: "Reading file"});
+    
+                return openTextEditor(path, stats);
+            });
+        } else {
+            openTextEditor(path, stats);
+        }
+    }
+
+    function openTextEditor(path: string, stats: Map<string, number>): Promise<void> {
+        return getSQL(path, stats).then((sql: string) => {
             let options: Object = {
                 content: sql,
                 language: "sql"
@@ -72,7 +83,7 @@ export function activate(context: vscode.ExtensionContext) {
         });
     }
 
-     function updateStatus(stats: Map<string, number>): void {
+    function updateStatus(stats: Map<string, number>): void {
         let statusStrings: Array<string> = [];
         stats.forEach((value: number, key: string) => {
             statusStrings.push(key + " " + value);
