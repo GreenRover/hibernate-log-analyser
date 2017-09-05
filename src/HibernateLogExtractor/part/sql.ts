@@ -77,7 +77,7 @@ export class sql extends part {
     }
 
     public complete(bindsString: string): void {
-        var bindsRegexA = /binding parameter \[(\d*)\] as .* \- \[(.*)\]/g;
+        var bindsRegexA = /binding parameter \[(\d*)\] as .* \- \[([^\]]+)\]/g;
         let m;
         while ((m = bindsRegexA.exec(bindsString)) !== null) {
             // This is necessary to avoid infinite loops with zero-width matches
