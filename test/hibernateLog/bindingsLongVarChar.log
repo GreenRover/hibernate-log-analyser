@@ -1,0 +1,7 @@
+2017-08-31 11:32:39,710 DEBUG AnonymousEventDispatcherThread-5 org.hibernate.SQL - [ <6a0e43f9-c414-46e5-bdf2-039533874987>  <xxxxx> ] /* update xxx.model.Document */ update DOCUMENT set GRAFIK_XML=? where ID=?
+2017-08-31 11:32:39,726 TRACE AnonymousEventDispatcherThread-5 org.hibernate.type.descriptor.sql.BasicBinder - [ <6a0e43f9-c414-46e5-bdf2-039533874987>  <xxxxx> ] binding parameter [1] as [LONGVARCHAR] - [<HybridModel version="4.01" name="xx ( xxx)">
+  <Domain>
+    <RichText>..............................................................
+  </ConnectorMap>
+</HybridModel>]
+2017-08-31 11:32:39,726 TRACE AnonymousEventDispatcherThread-5 org.hibernate.type.descriptor.sql.BasicBinder - [ <6a0e43f9-c414-46e5-bdf2-039533874987>  <xxxxx> ] binding parameter [2] as [BIGINT] - [3090626]

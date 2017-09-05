@@ -50,6 +50,10 @@ suite("HibernateLogExtractor Tests", () => {
         return testFile("statistic");
     });
 
+    test("bindingsLongVarChar", () => {
+        return testFile("bindingsLongVarChar");
+    });
+
     let testFile = (baseName: string): Promise<void> => {
         let path: string = __dirname + "/../../test/hibernateLog/" + baseName;
         let expectedSql: string = fs.readFileSync(path + ".sql", "utf8") //
