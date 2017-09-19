@@ -13,12 +13,12 @@ export class sql extends part {
     private comment: string;
 
     public static test(line: string): sql|null {
-        var resultA = sql.testRegexA.exec(line);
+        let resultA = sql.testRegexA.exec(line);
         if (resultA !== null) {
-            return new sql(resultB[2], resultB[1] || "", resultB[3]);
+            return new sql(resultA[2], resultA[1] || "", resultA[3]);
         }
 
-        var resultB = sql.testRegexB.exec(line);
+        let resultB = sql.testRegexB.exec(line);
         if (resultB !== null) {
             return new sql(resultB[2], resultB[1] || "", resultB[3]);
         }
@@ -59,11 +59,11 @@ export class sql extends part {
     }
 
     private joinBindings(): string {
-        var expectedBindingsCount = this.query.split("?").length - 1;
+        let expectedBindingsCount = this.query.split("?").length - 1;
 
         let query = this.query;
         for (let i = 1; i <= expectedBindingsCount; i++) {
-            var value;
+            let value;
             if (i in this.bindings) {
                 value = this.prepareBindValue(this.bindings[i]);
             } else {
@@ -77,7 +77,7 @@ export class sql extends part {
     }
 
     public complete(bindsString: string): void {
-        var bindsRegexA = /binding parameter \[(\d*)\] as .* \- \[([^\]]+)\]/g;
+        let bindsRegexA = /binding parameter \[(\d*)\] as .* \- \[([^\]]+)\]/g;
         let m;
         while ((m = bindsRegexA.exec(bindsString)) !== null) {
             // This is necessary to avoid infinite loops with zero-width matches
@@ -85,21 +85,21 @@ export class sql extends part {
                 bindsRegexA.lastIndex++;
             }
 
-            var bindIndex = parseInt(m[1]);
-            var bindValue = m[2];
+            let bindIndex = parseInt(m[1]);
+            let bindValue = m[2];
 
             this.bindings[bindIndex] = bindValue;
         }
 
-        var bindsRegexB = /Binding (.+) to parameter\: \[(\d+)\]/g;
+        let bindsRegexB = /Binding (.+) to parameter\: \[(\d+)\]/g;
         while ((m = bindsRegexB.exec(bindsString)) !== null) {
             // This is necessary to avoid infinite loops with zero-width matches
             if (m.index === bindsRegexB.lastIndex) {
                 bindsRegexB.lastIndex++;
             }
 
-            var bindIndex = parseInt(m[2]);
-            var bindValue = m[1];
+            let bindIndex = parseInt(m[2]);
+            let bindValue = m[1];
 
             this.bindings[bindIndex] = bindValue;
         }
@@ -121,13 +121,13 @@ export class sql extends part {
             if (value == "true") {
                 return "1";
             }
-            var dateRegex = /\w+ (\w+) (\d+) (\d+)\:(\d+)\:(\d+)\ (\w+) (\d+)/;
-            var dateParts = dateRegex.exec(value);
+            let dateRegex = /\w+ (\w+) (\d+) (\d+)\:(\d+)\:(\d+)\ (\w+) (\d+)/;
+            let dateParts = dateRegex.exec(value);
             if (dateParts != null) {
                 // Is DateTime  Example: 
                 //     1   2  3  4  5  6    7
                 // Wed Jul 05 22:06:46 CEST 2017
-                var sqlDate = dateParts[7] + "-" + this.monthToNumber(dateParts[1]) + "-" + parseInt(dateParts[2]) + " " + dateParts[3] + ":" + dateParts[4] + ":" + dateParts[5];
+                let sqlDate = dateParts[7] + "-" + this.monthToNumber(dateParts[1]) + "-" + parseInt(dateParts[2]) + " " + dateParts[3] + ":" + dateParts[4] + ":" + dateParts[5];
                 return "TO_TIMESTAMP('" + sqlDate + "', 'YYYY-MM-DD HH24:MI:SS') /* " + value + " */";
             }
 

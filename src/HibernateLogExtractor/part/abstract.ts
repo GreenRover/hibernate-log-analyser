@@ -14,4 +14,16 @@ export abstract class part {
            stats.set(key, value);
         }
     }
+
+    protected extractDate(rawLine: string, regexString: string): string {
+        try {
+            let regex = new RegExp(regexString);
+
+            let result = regex.exec(rawLine);
+ 
+            return (result != null && result[1] && result[1].length > 0) ? result[1] : null;
+        } catch (err) {
+            return null;
+        }
+    }
 }

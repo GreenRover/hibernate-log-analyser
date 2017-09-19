@@ -7,28 +7,35 @@ export class hql extends part {
     static testRegex = /\: HQL: (.+)\, time: (\d+)ms, rows: (\d+)/i;
 
     private query: string;
-    private time: number;
+    private queryTime: number;
     private rows: number;
+    private rawLine: string;
 
     public static test(line: string): hql|null {
-        var result = hql.testRegex.exec(line);
+        let result = hql.testRegex.exec(line);
         if (result !== null) {
-            return new hql(result[1], parseInt(result[2]), parseInt(result[3]));
+            return new hql(result[1], parseInt(result[2]), parseInt(result[3]), line);
         }
 
         return null;
     }
 
-    constructor(query: string, time: number, rows: number) {
+    constructor(query: string, time: number, rows: number, rawLine: string) {
         super();
         
         this.query = query.trim();
-        this.time = time;
+        this.queryTime = time;
         this.rows = rows;
+        this.rawLine = rawLine.trim();
     }
 
     public getOutput(config: HibernateLogExtractorConfig): string {
-        return "/* " + this.query + ", time: " + this.time + "ms, rows: " + this.rows + " */";
+        let dateString: string = "";
+        if (config.extractDate) {
+            dateString = this.getDatePart(config.dateRegex);
+        }
+
+        return "/* " + dateString + this.query + ", time: " + this.queryTime + "ms, rows: " + this.rows + " */";
     }
 
     public complete(behind: string): void {
@@ -36,6 +43,11 @@ export class hql extends part {
     }
 
     public getStats(stats: Map<string, number>): void {
-        this.addToStats(stats, "queryTime", this.time);
+        this.addToStats(stats, "queryTime", this.queryTime);
+    }
+
+    private getDatePart(dateRegex: string): string {
+        let dateString = this.extractDate(this.rawLine, dateRegex);
+        return (dateString == null) ? "" : dateString + "  ";
     }
 }

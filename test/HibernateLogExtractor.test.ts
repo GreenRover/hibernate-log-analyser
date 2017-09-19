@@ -10,7 +10,11 @@ import * as fs from 'fs';
 
 suite("HibernateLogExtractor Tests", () => {
 
-    let config: HibernateLogExtractorConfig = new HibernateLogExtractorConfig();
+    let config: HibernateLogExtractorConfig;
+    
+    setup(() => {
+        config = new HibernateLogExtractorConfig();
+    });
 
     test("Include bindings basic", () => {
         return testFile("bindingsBasic");
@@ -54,6 +58,13 @@ suite("HibernateLogExtractor Tests", () => {
         return testFile("bindingsLongVarChar");
     });
 
+    test("hqlDate", () => {
+        config.hql = true;
+        config.extractDate = true;
+        config.dateRegex = "(\\d{4}\-\\d{2}\-\\d{2} \\d{2}\\:\\d{2}\\:\\d{2}\\,\\d{3})";
+        return testFile("hqlDate");
+    });
+
     let testFile = (baseName: string): Promise<void> => {
         let path: string = __dirname + "/../../test/hibernateLog/" + baseName;
         let expectedSql: string = fs.readFileSync(path + ".sql", "utf8") //
@@ -65,8 +76,8 @@ suite("HibernateLogExtractor Tests", () => {
         return fileReadet.then(
             () => {
                 let sql: string = logExtractor.getSql() //
-                .trim().replace(/\r\n/g, "\n");
-    
+                    .trim().replace(/\r\n/g, "\n");
+
                 assert.notEqual(sql, "", "Empty result");
     
                 assert.equal(sql, expectedSql);
