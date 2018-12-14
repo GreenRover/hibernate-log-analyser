@@ -58,6 +58,10 @@ suite("HibernateLogExtractor Tests", () => {
         return testFile("bindingsLongVarChar");
     });
 
+    test("stdOutLogComplex", () => {
+        return testFile("stdOutLogComplex");
+    });
+
     test("hqlDate", () => {
         config.hql = true;
         config.extractDate = true;
