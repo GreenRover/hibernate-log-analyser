@@ -13,17 +13,17 @@ import { FileUtils } from './FileUtils';
 export function activate(context: vscode.ExtensionContext) {
 
     const status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-    const TWO_MB: number = 2 * 1024 * 1024; 
+    const TWO_MB: number = 2 * 1024 * 1024;
 
     let extractHibernateLogCommand = vscode.commands.registerCommand('hibernateLogExtract.extractHibernateLog', () => {
         return extractSqlFromHibernateLog();
     });
 
     let reloadFileCommand = vscode.commands.registerCommand('hibernateLogExtract.reloadFile', () => {
-       return reloadFile();
+        return reloadFile();
     });
     let fileReload = new FileReloadContentProvider();
-    
+
     context.subscriptions.push(reloadFileCommand, vscode.Disposable.from(
         vscode.workspace.registerTextDocumentContentProvider('fileReload', fileReload)
     ));
@@ -32,19 +32,33 @@ export function activate(context: vscode.ExtensionContext) {
     let clearFileCommand = vscode.commands.registerCommand('hibernateLogExtract.clearFile', () => {
         clearFile();
         return reloadFile();
-     });
-     context.subscriptions.push(clearFileCommand, vscode.Disposable.from(
-         vscode.workspace.registerTextDocumentContentProvider('fileReload', fileReload)
-     ));
+    });
+    context.subscriptions.push(clearFileCommand, vscode.Disposable.from(
+        vscode.workspace.registerTextDocumentContentProvider('fileReload', fileReload)
+    ));
 
-     function extractSqlFromHibernateLog() {
+    function extractSqlFromHibernateLog() {
         var editor = vscode.window.activeTextEditor;
         var path: string;
         if (editor) {
+            if (editor.document.isUntitled) {
+                // File is a new editor and was never saved.
+                try {
+                    parseSqlFromStringAndOpenTextEditor(editor.document.getText());
+                } catch (e) {
+                    displayError(e);
+                }
+                return;
+            }
+
+            if (editor.document.isDirty) {
+                vscode.window.showWarningMessage("Please save the file before, parsing version from filesystem");
+            }
+
             path = editor.document.uri.fsPath;
         } else {
             console.log("No open text editor");
-            
+
             if (vscode.workspace.textDocuments.length == 1) {
                 path = vscode.workspace.textDocuments[0].uri.fsPath;
             } else {
@@ -53,33 +67,56 @@ export function activate(context: vscode.ExtensionContext) {
             }
         }
 
-        let stats: Map<string, number> = new Map();
-        let isLargeFile: boolean = (FileUtils.getFilesize(path) > TWO_MB);
-        
-        if (isLargeFile) {
-            vscode.window.withProgress({ location: vscode.ProgressLocation.Window, title: 'Extracting SQL'}, (progress) => {
-                progress.report({ message: "Reading file"});
-    
-                return openTextEditor(path, stats);
-            });
-        } else {
-            openTextEditor(path, stats);
+        try {
+            let isLargeFile: boolean = (FileUtils.getFilesize(path) > TWO_MB);
+
+            if (isLargeFile) {
+                vscode.window.withProgress({ location: vscode.ProgressLocation.Window, title: 'Extracting SQL' }, (progress) => {
+                    progress.report({ message: "Reading file" });
+
+                    return parseSqlFromPathAndOpenTextEditor(path);
+                });
+            } else {
+                parseSqlFromPathAndOpenTextEditor(path);
+            }
+        } catch (e) {
+            displayError(e);
+            return null;
         }
     }
 
-    function openTextEditor(path: string, stats: Map<string, number>): Promise<void> {
-        return getSQL(path, stats).then((sql: string) => {
+    function parseSqlFromPathAndOpenTextEditor(path: string): Promise<void> {
+        let stats: Map<string, number> = new Map();
+
+        return getSqlFromPath(path, stats).then((sql: string) => {
             let options: Object = {
                 content: sql,
                 language: "sql"
             };
-        
-            vscode.workspace.openTextDocument(options).then(doc => {
-                vscode.window.showTextDocument(doc, vscode.ViewColumn.One);
-                updateStatus(stats);
-            }, err => {
-                vscode.window.showErrorMessage(err);
-            });
+
+            openTextEditor(options, stats);
+        });
+    }
+
+    function parseSqlFromStringAndOpenTextEditor(str: string): Promise<void> {
+        let stats: Map<string, number> = new Map();
+
+        return getSqlFromString(str, stats).then((sql: string) => {
+            let options: Object = {
+                content: sql,
+                language: "sql"
+            };
+
+            openTextEditor(options, stats);
+        });
+    }
+
+    function openTextEditor(options: Object, stats: Map<string, number>) {
+        vscode.workspace.openTextDocument(options).then(doc => {
+            vscode.window.showTextDocument(doc, vscode.ViewColumn.One);
+            updateStatus(stats);
+        }, err => {
+            vscode.window.showErrorMessage(err);
         });
     }
 
@@ -88,22 +125,48 @@ export function activate(context: vscode.ExtensionContext) {
         stats.forEach((value: number, key: string) => {
             statusStrings.push(key + " " + value);
         });
-    
+
         status.text = statusStrings.join(", ");
         status.show();
     }
+}
+
+function displayError(e: any): void {
+    if (typeof e == "object") {
+        if (e.message) {
+            e = e.message;
+        }
+        else {
+            e = JSON.stringify(e);
+        }
+    }
+    vscode.window.showErrorMessage(e);
 }
 
 // this method is called when your extension is deactivated
 export function deactivate() {
 }
 
-function getSQL(path: string, stats: Map<string, number>): Promise<string> {
+function getSqlFromPath(path: string, stats: Map<string, number>): Promise<string> {
     return new Promise<string>((resolve, reject) => {
         let logExtractor = new HibernateLogExtractor(getConfig());
         logExtractor.extractFromFile(path).then(
             () => {
-                resolve( logExtractor.getSql(stats) );
+                resolve(logExtractor.getSql(stats));
+            },
+            (err: Error) => {
+                reject(err);
+            }
+        );
+    });
+}
+
+function getSqlFromString(str: string, stats: Map<string, number>): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+        let logExtractor = new HibernateLogExtractor(getConfig());
+        logExtractor.extractFromString(str).then(
+            () => {
+                resolve(logExtractor.getSql(stats));
             },
             (err: Error) => {
                 reject(err);

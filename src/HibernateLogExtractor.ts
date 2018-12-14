@@ -46,6 +46,16 @@ export class HibernateLogExtractor {
         });
     }
 
+    public extractFromString(str: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            str.split("\n").forEach(line => {
+                this.extractLine(line);
+            });
+            this.completeLastPart();
+            resolve();
+        });
+    }
+
     private extractLines(rawText: string, performLastLine: boolean): string {
         
 
@@ -79,6 +89,7 @@ export class HibernateLogExtractor {
             this.testAndTake( statistic.test(line) );
         }
 
+        // @TODO eventualy optimize: use a max 300 lines, to not use enormus memory when log contains less hibernate log and mutch other stuff
         this.behind += line + "\n";
     }
 
