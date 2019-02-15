@@ -32,10 +32,6 @@ export class sql extends part {
         this.query = query.trim();
         this.comment = comment.trim();
 
-        if (this.query.substr(this.query.length -1, 1) != ";") {
-            this.query += ";";
-        }
-
         this.queryType = queryType.toLowerCase();
     }
 
@@ -76,10 +72,20 @@ export class sql extends part {
         return query;
     }
 
-    public complete(bindsString: string): void {
+    public complete(rawLogLines: string): void {
+        // Handle multy line querys. // First line is the main query, ignore it.
+        let logLines = rawLogLines.split("\n");
+        for (let i = 1 ; i < logLines.length ; i++) {
+            if (logLines[i].substring(0, 4) == "    ") {
+                this.query += " " + logLines[i].trim();
+            } else {
+                break;
+            }
+        }
+
         let bindsRegexA = /binding parameter \[(\d*)\] as .* \- \[([^\]]+)\]/g;
         let m;
-        while ((m = bindsRegexA.exec(bindsString)) !== null) {
+        while ((m = bindsRegexA.exec(rawLogLines)) !== null) {
             // This is necessary to avoid infinite loops with zero-width matches
             if (m.index === bindsRegexA.lastIndex) {
                 bindsRegexA.lastIndex++;
@@ -92,7 +98,7 @@ export class sql extends part {
         }
 
         let bindsRegexB = /Binding (.+) to parameter\: \[(\d+)\]/g;
-        while ((m = bindsRegexB.exec(bindsString)) !== null) {
+        while ((m = bindsRegexB.exec(rawLogLines)) !== null) {
             // This is necessary to avoid infinite loops with zero-width matches
             if (m.index === bindsRegexB.lastIndex) {
                 bindsRegexB.lastIndex++;
@@ -102,6 +108,10 @@ export class sql extends part {
             let bindValue = m[1];
 
             this.bindings[bindIndex] = bindValue;
+        }
+
+        if (this.query.substr(this.query.length -1, 1) != ";") {
+            this.query += ";";
         }
     }
 

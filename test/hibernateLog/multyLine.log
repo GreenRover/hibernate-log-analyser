@@ -1,0 +1,31 @@
+DEBUG main SQL:94 - [] /* from BetriebspunktInfo bpi where bpi.rcsdRelevant = true */ select betriebspu0_.ID_VERSION as ID_VERSION1_23_, betriebspu0_.ID_BETRIEBSPUNKT as ID_BETRIEBSPUNKT2_23_, betriebspu0_.BP_ABKUERZUNG as BP_ABKUERZUNG3_23_, betriebspu0_.BEZEICHNUNG as BEZEICHNUNG4_23_, betriebspu0_.IDT_DIENSTSTELLENART as IDT_DIENSTSTELLENA5_23_, betriebspu0_.GUELTIG_AB as GUELTIG_AB6_23_, betriebspu0_.GUELTIG_BIS as GUELTIG_BIS7_23_, betriebspu0_.STAO_KOORDINATEN_1 as STAO_KOORDINATEN_8_23_, betriebspu0_.STAO_KOORDINATEN_2 as STAO_KOORDINATEN_9_23_, betriebspu0_.STAO_KOORDINATEN_3 as STAO_KOORDINATEN_10_23_, 
+        (select NVL(max(bi.BPI_ZON_ID), 0) from Betriebspunkt_Info bi where bi.BPI_ID_BETRIEBSPUNKT = betriebspu0_.ID_BETRIEBSPUNKT)
+       as formula0_, 
+        (select z.ZON_REL_RCSD from zone z where z.zon_id = (select NVL(max(bi.BPI_ZON_ID), 0) from Betriebspunkt_Info bi where bi.BPI_ID_BETRIEBSPUNKT = betriebspu0_.ID_BETRIEBSPUNKT))
+       as formula1_, 
+        (select z.ZON_REL_EXT from zone z where z.zon_id = (select NVL(max(bi.BPI_ZON_ID), 0) from Betriebspunkt_Info bi where bi.BPI_ID_BETRIEBSPUNKT = betriebspu0_.ID_BETRIEBSPUNKT))
+       as formula2_ from BETRIEBSPUNKT betriebspu0_ where 
+        (select z.ZON_REL_RCSD from zone z where z.zon_id = (select NVL(max(bi.BPI_ZON_ID), 0) from Betriebspunkt_Info bi where bi.BPI_ID_BETRIEBSPUNKT = betriebspu0_.ID_BETRIEBSPUNKT))
+      ='T'
+Hibernate: /* from BetriebspunktInfo bpi where bpi.rcsdRelevant = true */ select betriebspu0_.ID_VERSION as ID_VERSION1_23_, betriebspu0_.ID_BETRIEBSPUNKT as ID_BETRIEBSPUNKT2_23_, betriebspu0_.BP_ABKUERZUNG as BP_ABKUERZUNG3_23_, betriebspu0_.BEZEICHNUNG as BEZEICHNUNG4_23_, betriebspu0_.IDT_DIENSTSTELLENART as IDT_DIENSTSTELLENA5_23_, betriebspu0_.GUELTIG_AB as GUELTIG_AB6_23_, betriebspu0_.GUELTIG_BIS as GUELTIG_BIS7_23_, betriebspu0_.STAO_KOORDINATEN_1 as STAO_KOORDINATEN_8_23_, betriebspu0_.STAO_KOORDINATEN_2 as STAO_KOORDINATEN_9_23_, betriebspu0_.STAO_KOORDINATEN_3 as STAO_KOORDINATEN_10_23_, 
+        (select NVL(max(bi.BPI_ZON_ID), 0) from Betriebspunkt_Info bi where bi.BPI_ID_BETRIEBSPUNKT = betriebspu0_.ID_BETRIEBSPUNKT)
+       as formula0_, 
+        (select z.ZON_REL_RCSD from zone z where z.zon_id = (select NVL(max(bi.BPI_ZON_ID), 0) from Betriebspunkt_Info bi where bi.BPI_ID_BETRIEBSPUNKT = betriebspu0_.ID_BETRIEBSPUNKT))
+       as formula1_, 
+        (select z.ZON_REL_EXT from zone z where z.zon_id = (select NVL(max(bi.BPI_ZON_ID), 0) from Betriebspunkt_Info bi where bi.BPI_ID_BETRIEBSPUNKT = betriebspu0_.ID_BETRIEBSPUNKT))
+       as formula2_ from BETRIEBSPUNKT betriebspu0_ where 
+        (select z.ZON_REL_RCSD from zone z where z.zon_id = (select NVL(max(bi.BPI_ZON_ID), 0) from Betriebspunkt_Info bi where bi.BPI_ID_BETRIEBSPUNKT = betriebspu0_.ID_BETRIEBSPUNKT))
+      ='T'
+TRACE main BasicExtractor:61 - [] extracted value ([ID_VERSION1_23_] : [INTEGER]) - [1160]
+TRACE main BasicExtractor:61 - [] extracted value ([formula0_] : [INTEGER]) - [4]
+TRACE main BasicExtractor:61 - [] extracted value ([ID_BETRIEBSPUNKT2_23_] : [INTEGER]) - [1160]
+TRACE main BasicExtractor:61 - [] extracted value ([BP_ABKUERZUNG3_23_] : [VARCHAR]) - [VI]
+TRACE main BasicExtractor:61 - [] extracted value ([BEZEICHNUNG4_23_] : [VARCHAR]) - [Visp]
+TRACE main BasicExtractor:61 - [] extracted value ([IDT_DIENSTSTELLENA5_23_] : [VARCHAR]) - [97]
+TRACE main BasicExtractor:61 - [] extracted value ([formula1_] : [CHAR]) - [true]
+TRACE main BasicExtractor:61 - [] extracted value ([formula2_] : [CHAR]) - [true]
+TRACE main BasicExtractor:61 - [] extracted value ([GUELTIG_AB6_23_] : [TIMESTAMP]) - [2017-12-10 00:00:00.0]
+TRACE main BasicExtractor:61 - [] extracted value ([GUELTIG_BIS7_23_] : [TIMESTAMP]) - [9999-12-31 00:00:00.0]
+TRACE main BasicExtractor:61 - [] extracted value ([STAO_KOORDINATEN_8_23_] : [FLOAT]) - [2634122.8]
+TRACE main BasicExtractor:61 - [] extracted value ([STAO_KOORDINATEN_9_23_] : [FLOAT]) - [1127053.4]
+TRACE main BasicExtractor:61 - [] extracted value ([STAO_KOORDINATEN_10_23_] : [FLOAT]) - [650.903]
