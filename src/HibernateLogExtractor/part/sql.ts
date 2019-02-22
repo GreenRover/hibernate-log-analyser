@@ -131,14 +131,24 @@ export class sql extends part {
             if (value == "true") {
                 return "1";
             }
-            let dateRegex = /\w+ (\w+) (\d+) (\d+)\:(\d+)\:(\d+)\ (\w+) (\d+)/;
-            let dateParts = dateRegex.exec(value);
-            if (dateParts != null) {
+
+            // Date by @Type
+            let dateRegexType = /\w+ (\w+) (\d+) (\d+)\:(\d+)\:(\d+)\ (\w+) (\d+)/;
+            let datePartsType = dateRegexType.exec(value);
+            if (datePartsType != null) {
                 // Is DateTime  Example: 
                 //     1   2  3  4  5  6    7
                 // Wed Jul 05 22:06:46 CEST 2017
-                let sqlDate = dateParts[7] + "-" + this.monthToNumber(dateParts[1]) + "-" + parseInt(dateParts[2]) + " " + dateParts[3] + ":" + dateParts[4] + ":" + dateParts[5];
+                let sqlDate = datePartsType[7] + "-" + this.monthToNumber(datePartsType[1]) + "-" + parseInt(datePartsType[2]) + " " + datePartsType[3] + ":" + datePartsType[4] + ":" + datePartsType[5];
                 return "TO_TIMESTAMP('" + sqlDate + "', 'YYYY-MM-DD HH24:MI:SS') /* " + value + " */";
+            }
+
+            // Date by @Converter
+            let dateRegexConverter = /^(\d{4})\-(\d{2})\-(\d{2})\ (\d{2})\:(\d{2})\:(\d{2})\.(\d+)$/;
+            if (value.match(dateRegexConverter)) {
+                // Is DateTime  Example: 
+                // 2019-02-22 09:00:55.53
+                return "TO_TIMESTAMP('" + value + "', 'YYYY-MM-DD HH24:MI:SS') /* " + value + " */";
             }
 
             // Is a real String.

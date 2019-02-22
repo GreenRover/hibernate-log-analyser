@@ -1,19 +1,29 @@
-/* 2017-08-10 11:20:43,651  select m from xxx.model.Massnahme as m inner join m.fall as f where f.id IN (:fallIds), time: 575ms, rows: 4954 */
+select
+  distinct ID_VERSION,
+  UIC_LAENDERCODE
+FROM
+  nutzung_system ns
+WHERE
+  betriebspu0_.ID_BETRIEBSPUNKT = 1007
+  and betriebspu0_.GUELTIG_AB <= TO_TIMESTAMP(
+    '2018-02-22 09:00:55.53',
+    'YYYY-MM-DD HH24:MI:SS'
+  )
+  /* 2018-02-22 09:00:55.53 */
+  and betriebspu0_.GUELTIG_BIS > TO_TIMESTAMP(
+    '2018-02-22 09:00:55.53',
+    'YYYY-MM-DD HH24:MI:SS'
+  )
+  /* 2018-02-22 09:00:55.53 */;
 
 select
-  *
-from
-  Massnahme massnahme0_
-  inner join Fall fall1_ on massnahme0_.FALL_ID = fall1_.ID
-where
-  fall1_.ID in (2195002840931);
-
-/* 2017-08-10 11:20:43,651  select m from xxx.model.Massnahme as m inner join m.fall as f where f.id IN (:fallIds), time: 575ms, rows: 4954 */
-
-select
-  *
-from
-  Massnahme massnahme0_
-  inner join Fall fall1_ on massnahme0_.FALL_ID = fall1_.ID
-where
-  fall1_.ID in (2195002840931);
+  distinct ID_VERSION,
+  UIC_LAENDERCODE
+FROM
+  nutzung_system ns
+WHERE
+  betriebspu0_.ID_BETRIEBSPUNKT = 1007
+  and betriebspu0_.GUELTIG_AB <= TO_TIMESTAMP('2019-02-22 09:30:47', 'YYYY-MM-DD HH24:MI:SS')
+  /* Fri Feb 22 09:30:47 CET 2019 */
+  and betriebspu0_.GUELTIG_BIS > TO_TIMESTAMP('2019-02-22 09:30:47', 'YYYY-MM-DD HH24:MI:SS')
+  /* Fri Feb 22 09:30:47 CET 2019 */;

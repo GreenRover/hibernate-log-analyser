@@ -62,10 +62,14 @@ suite("HibernateLogExtractor Tests", () => {
         return testFile("stdOutLogComplex");
     });
 
-    test("hqlDate", () => {
+    test("hqlTimestamp", () => {
         config.hql = true;
         config.extractDate = true;
         config.dateRegex = "(\\d{4}\-\\d{2}\-\\d{2} \\d{2}\\:\\d{2}\\:\\d{2}\\,\\d{3})";
+        return testFile("hqlTimestamp");
+    });
+
+    test("hqlDate", () => {
         return testFile("hqlDate");
     });
 
